@@ -1,4 +1,7 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace MyShop
 {
@@ -12,6 +15,26 @@ namespace MyShop
 
             using (var context = new SqlDb())
             {
+                Customer c = context.Customers.Find(1);
+                Account account = new Account
+                {
+                    Balance = 1000,
+                  //  Customer = c,
+                };
+                c.Accounts = new List<Account>();
+                c.Accounts.Add(account);
+
+              //  context.Accounts.Add(account);
+                context.SaveChanges();
+                Console.WriteLine("1 " +c.Accounts.Count);
+                c = context.Customers.Find(1);
+                Console.WriteLine("2 " +c.Accounts.Count);
+
+                c = context.Customers
+                    .Where(cust => cust.Id == 1)
+                    .Include(cust => cust.Accounts)
+                    .FirstOrDefault();
+                Console.WriteLine("3 " +c.Accounts.Count);
 
 
             }
